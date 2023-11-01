@@ -32,10 +32,8 @@ float PowerSniffer::getReading() {
     float lvolts = map_to_interval((float) lraw, 0.0f, 1023.0f, 0.0f, 28.5f);
     float rvolts = map_to_interval((float) rraw, 0.0f, 1023.0f, 0.0f, 28.5f);
 
-    // Serial.print("lvolts: ");
-    // Serial.print(lvolts);
-    // Serial.print(" rvolts: ");
-    // Serial.println(rvolts);
+    Serial.print(">lvolts: "); Serial.println(lvolts);
+    Serial.print(">rvolts: "); Serial.println(rvolts);
 
     // Get the output reading
     return log(lvolts + this->bias) - log(rvolts + this->bias);

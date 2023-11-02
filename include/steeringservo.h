@@ -3,6 +3,7 @@
     #define STEERINGSERVO_H
 
     #include "powersniffer.h"
+    #include "filters.h"
     #include "pidcontroller.h"
     #include <Servo.h>
 
@@ -14,6 +15,7 @@
     #define POWER_SNIFFING_LEFT_COIL_PIN A5
     #define POWER_SNIFFING_RIGHT_COIL_PIN A4
     #define POWER_SNIFFING_CONTROL_SAMPLE_TIME_MS 20
+    #define FILTER_ALPHA 1.0f
 
     /**
      * @brief Class that implements a steering servo.
@@ -26,6 +28,7 @@
         Servo servo;
         PowerSniffer ps;
         PidController pid;
+        IIRFilter filter;
         bool autoSteerEnabled;
 
         SteeringServo() {}

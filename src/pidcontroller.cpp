@@ -21,13 +21,6 @@ PidController::PidController(float Kp, float Ki, float Kd, float dt) {
 
 float PidController::update(float target, float curr) {
 
-    // Check for infinities and NaNs and return NaN if they are found.
-    if (isnan(target) || isnan(curr) || isinf(target) || isinf(curr)) {
-
-        return NAN;
-
-    }
-
     float err = target - curr;
     
     this->ierr += err * dt;
@@ -35,21 +28,6 @@ float PidController::update(float target, float curr) {
     float response = this->Kp * err + this->Ki * this->ierr + (err - this->derr) / this->dt;
 
     this->derr = err;
-
-    Serial.print("Kp: ");
-    Serial.print(this->Kp);
-    Serial.print(" Ki: ");
-    Serial.print(this->Ki);
-    Serial.print(" Kd: ");
-    Serial.print(this->Kd);
-    Serial.print(" dt: ");
-    Serial.print(this->dt);
-    Serial.print(" target: ");
-    Serial.print(target);
-    Serial.print(" curr: ");
-    Serial.print(curr);
-    Serial.print(" response: ");
-    Serial.println(response);
 
     return response;
 

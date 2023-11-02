@@ -13,6 +13,7 @@ SteeringServo::SteeringServo(uint8_t pin, float target, float Kp, float Ki, floa
     this->ps = PowerSniffer(POWER_SNIFFING_LEFT_COIL_PIN, POWER_SNIFFING_RIGHT_COIL_PIN);
     this->pid = PidController(Kp, Ki, Kd, dt);
     this->autoSteerEnabled = false;
+    this->filter = IIRFilter(FILTER_ALPHA);
 
     // Connect pin
     this->servo.attach(this->pin);
@@ -43,26 +44,31 @@ void SteeringServo::run() {
 
         // Perform Reading
         float curr = this->ps.getReading();
+        Serial.print(">Current: "); Serial.println(curr);
+
+        // Filter response
+        float filtered = this->filter.pass(curr);
+        Serial.print(">Filtered: "); Serial.println(filtered);
 
         // Perform PID Update
-        float response = this->pid.update(this->target, curr);
+        float response = this->pid.update(this->target, filtered);
+        Serial.print(">PID: "); Serial.println(response);
 
-        if (!isnan(response)) {
+        // Convert angle in degrees to PWM
+        this->pwm = (int) map_to_interval(
+            response, 
+            -STEERING_SERVO_MAX_DEG, 
+            STEERING_SERVO_MAX_DEG, 
+            STEERING_SERVO_MAX_LEFT_PWM, 
+            STEERING_SERVO_MAX_RIGHT_PWM
+        );
 
-            // Convert angle in degrees to PWM
-            this->pwm = (int) map_to_interval(
-                response, 
-                -STEERING_SERVO_MAX_DEG, 
-                STEERING_SERVO_MAX_DEG, 
-                STEERING_SERVO_MAX_LEFT_PWM, 
-                STEERING_SERVO_MAX_RIGHT_PWM
-            );
+        Serial.print(">PWM: "); Serial.println(this->pwm);
 
-            // Set output PWM
-            this->servo.writeMicroseconds(this->pwm);
+        // Set output PWM
+        this->servo.writeMicroseconds(this->pwm);
 
-        }
-
+        // Update last time
         lastTime = millis();
 
     }

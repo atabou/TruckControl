@@ -170,7 +170,30 @@ void processCommand(String command) {
         
         } else {
         
-            Serial.println("Invalid command. Usage: set motor <PWM>.\nIf you do not know what's wrong pay attention to spaces.\nOut program is still space sensitive.");
+            Serial.println("Invalid command. Usage: set motor <PWM>.\nIf you do not know what's wrong pay attention to spaces.\nOur program is still space sensitive.");
+        
+        }
+
+    } else if (command.equals("set IIR")) {
+    
+        float alpha;
+
+        if (sscanf(command.c_str(), "set IIR %f", alpha) == 1) {
+        
+            if (alpha > 1.0f || alpha < 0.0f) {
+            
+                Serial.println("set IIR: alpha must be between 0 and 1.");
+            
+            } else {
+            
+                steering.filter.alpha = alpha;
+                steering.filter.reset();
+            
+            }
+
+        } else {
+        
+            Serial.println("Invalid command. Usage: set IIR <alpha>.\nIf you do not know what's wrong pay attention to spaces.\nOur program is still space sensitive.");
         
         }
 
@@ -186,6 +209,7 @@ void processCommand(String command) {
         Serial.println("    target <target:float>                 - Sets the target of the PID");
         Serial.println("    motor <PWM:int>                       - Sets the PWM for motor control");
         Serial.println("    servo <PWM:int>                       - Sets the PWM for servo control");
+        Serial.println("    IIR <alpha:float>                     - Sets the alpha value for the IIR filter");
         Serial.println("  help                        - Prints this message");
 
     } else {

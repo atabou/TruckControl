@@ -46,6 +46,14 @@ void SteeringServo::run() {
         float curr = this->ps.getReading();
         Serial.print(">Current: "); Serial.println(curr);
 
+        // Check for NaN or Inf
+        if (isnan(curr) || isinf(curr)) {
+
+            Serial.println("[WARNING] Infinite or NaN value passed to IIR Filter.");
+            return;
+
+        }
+
         // Filter response
         float filtered = this->filter.pass(curr);
         Serial.print(">Filtered: "); Serial.println(filtered);

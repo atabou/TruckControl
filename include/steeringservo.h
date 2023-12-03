@@ -31,7 +31,9 @@
         IIRFilter filter;
         bool autoSteerEnabled;
 
+
         SteeringServo() {}
+
 
         /**
          * @brief Construct a new Steering Servo object.
@@ -48,6 +50,7 @@
          * @note The target angle must be between -STEERING_SERVO_MAX_DEG and STEERING_SERVO_MAX_DEG.
         */
         SteeringServo(uint8_t pin, float target, float Kp, float Ki, float Kd, float dt);
+
 
         void setPWM(int pwm);
 

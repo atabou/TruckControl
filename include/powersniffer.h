@@ -11,6 +11,7 @@
 
         PowerSniffer() {}
 
+
         /**
          * @brief Construct a new Power Sniffer object.
          * 
@@ -21,12 +22,14 @@
         */
         PowerSniffer(int leftPin, int rightPin);
 
+
         /**
          * @brief Get the current reading of the power sniffer.
          * 
          * @return float The current reading of the power sniffer.
         */
         float getReading();
+
 
         /**
          * @brief Set the bias of the power sniffer.
